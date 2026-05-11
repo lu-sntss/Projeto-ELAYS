@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5p0tg3mc2el4"]
+
+[ext_resource type="Shader" uid="uid://e1q4s8gz0bxn6" path="res://shaders/post_processing.gdshader" id="1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
+shader = ExtResource("1")
+shader_parameter/curve_strength = 0.15
+shader_parameter/vertical_offset = 0.5
+
+[node name="PixelViewport" type="SubViewportContainer"]
+offset_right = 1280.0
+offset_bottom = 720.0
+stretch = true
+texture_filter = 1
+material = SubResource("ShaderMaterial_1")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+own_world_3d = true
+size = Vector2i(426, 240)
+render_target_update_mode = 4

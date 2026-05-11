@@ -1,0 +1,169 @@
+[gd_scene format=3 uid="uid://cb4m2n3j5vq7r"]
+
+[ext_resource type="PackedScene" uid="uid://djfdykfmdkh1" path="res://scenes/entities/player.tscn" id="1"]
+[ext_resource type="Shader" uid="uid://dgn8wkh55l4c8" path="res://shaders/post_processing.gdshader" id="2"]
+[ext_resource type="Shader" uid="uid://dhr2ey1p3cdgl" path="res://shaders/sky.gdshader" id="3"]
+[ext_resource type="Script" uid="uid://h337ukkatbwv" path="res://scripts/systems/sky_controller.gd" id="4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_PostProc"]
+shader = ExtResource("2")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_Sky"]
+shader = ExtResource("3")
+shader_parameter/horizon_color = Color(0.48, 0.52, 0.6, 1)
+shader_parameter/zenith_color = Color(0.18, 0.18, 0.35, 1)
+shader_parameter/cloud_color = Color(0.5, 0.5, 0.58, 1)
+shader_parameter/cloud_coverage = 0.7
+shader_parameter/cloud_speed = 0.02
+shader_parameter/sun_direction = Vector3(0, -1, 0)
+shader_parameter/time_of_day = 0.5
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ShaderMaterial_Sky")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 2
+ambient_light_color = Color(0.1, 0.1, 0.18, 1)
+ambient_light_energy = 0.3
+fog_enabled = true
+fog_light_color = Color(0.14, 0.15, 0.2, 1)
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.04
+volumetric_fog_albedo = Color(0.1, 0.09, 0.07, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1"]
+size = Vector2(50, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Chao"]
+albedo_color = Color(0.18, 0.16, 0.13, 1)
+metallic_specular = 0.0
+roughness = 0.95
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_Ruin1"]
+size = Vector3(2, 3, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_Ruin"]
+albedo_color = Color(0.28, 0.25, 0.2, 1)
+metallic_specular = 0.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_Ruin1"]
+size = Vector3(2, 3, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_Ruin2"]
+size = Vector3(1.5, 2, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_Ruin2"]
+size = Vector3(1.5, 2, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_Ruin3"]
+size = Vector3(0.8, 4, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_Ruin3"]
+size = Vector3(0.8, 4, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_Ruin4"]
+size = Vector3(3, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_Ruin4"]
+size = Vector3(3, 1, 1)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1"]
+size = Vector2(80, 100)
+
+[node name="Main" type="Node" unique_id=1698744053]
+
+[node name="PixelViewport" type="SubViewportContainer" parent="." unique_id=1839620287]
+texture_filter = 1
+material = SubResource("ShaderMaterial_PostProc")
+offset_right = 1280.0
+offset_bottom = 720.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="PixelViewport" unique_id=828044179]
+own_world_3d = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="PixelViewport/SubViewport" unique_id=937658102]
+environment = SubResource("Environment_1")
+
+[node name="LuzSolar" type="DirectionalLight3D" parent="PixelViewport/SubViewport" unique_id=12685238]
+transform = Transform3D(0.7071055, -0.50000185, 0.5, 0, 0.7071055, 0.7071081, -0.7071081, -0.5, 0.4999982, 0, 0, 0)
+light_color = Color(0.82, 0.83, 0.9, 1)
+light_energy = 0.65
+shadow_enabled = true
+
+[node name="SkyController" type="Node" parent="PixelViewport/SubViewport" unique_id=228828071]
+script = ExtResource("4")
+luz_solar = NodePath("../LuzSolar")
+world_env = NodePath("../WorldEnvironment")
+
+[node name="Chao" type="StaticBody3D" parent="PixelViewport/SubViewport" unique_id=925131834]
+
+[node name="MeshChao" type="MeshInstance3D" parent="PixelViewport/SubViewport/Chao" unique_id=679929090]
+mesh = SubResource("PlaneMesh_1")
+surface_material_override/0 = SubResource("StandardMaterial3D_Chao")
+
+[node name="ColisaoChao" type="CollisionShape3D" parent="PixelViewport/SubViewport/Chao" unique_id=433387345]
+shape = SubResource("WorldBoundaryShape3D_1")
+
+[node name="Ruina01" type="StaticBody3D" parent="PixelViewport/SubViewport" unique_id=1759073520]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.5, -6)
+
+[node name="Mesh" type="MeshInstance3D" parent="PixelViewport/SubViewport/Ruina01" unique_id=734511487]
+mesh = SubResource("BoxMesh_Ruin1")
+surface_material_override/0 = SubResource("StandardMaterial3D_Ruin")
+
+[node name="Colisao" type="CollisionShape3D" parent="PixelViewport/SubViewport/Ruina01" unique_id=616116293]
+shape = SubResource("BoxShape3D_Ruin1")
+
+[node name="Ruina02" type="StaticBody3D" parent="PixelViewport/SubViewport" unique_id=1530290997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, -5)
+
+[node name="Mesh" type="MeshInstance3D" parent="PixelViewport/SubViewport/Ruina02" unique_id=2016215839]
+mesh = SubResource("BoxMesh_Ruin2")
+surface_material_override/0 = SubResource("StandardMaterial3D_Ruin")
+
+[node name="Colisao" type="CollisionShape3D" parent="PixelViewport/SubViewport/Ruina02" unique_id=1380473901]
+shape = SubResource("BoxShape3D_Ruin2")
+
+[node name="Ruina03" type="StaticBody3D" parent="PixelViewport/SubViewport" unique_id=1012040800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, -3)
+
+[node name="Mesh" type="MeshInstance3D" parent="PixelViewport/SubViewport/Ruina03" unique_id=767554499]
+mesh = SubResource("BoxMesh_Ruin3")
+surface_material_override/0 = SubResource("StandardMaterial3D_Ruin")
+
+[node name="Colisao" type="CollisionShape3D" parent="PixelViewport/SubViewport/Ruina03" unique_id=306502795]
+shape = SubResource("BoxShape3D_Ruin3")
+
+[node name="Ruina04" type="StaticBody3D" parent="PixelViewport/SubViewport" unique_id=786300614]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -8)
+
+[node name="Mesh" type="MeshInstance3D" parent="PixelViewport/SubViewport/Ruina04" unique_id=1735476121]
+mesh = SubResource("BoxMesh_Ruin4")
+surface_material_override/0 = SubResource("StandardMaterial3D_Ruin")
+
+[node name="Colisao" type="CollisionShape3D" parent="PixelViewport/SubViewport/Ruina04" unique_id=1409604420]
+shape = SubResource("BoxShape3D_Ruin4")
+
+[node name="Player" parent="PixelViewport/SubViewport" unique_id=1041483154 instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1547947147]
+layer = 10
+
+[node name="MaoEsquerda" type="Sprite2D" parent="HUD" unique_id=1408182324]
+modulate = Color(0.8, 0.6, 0.2, 1)
+position = Vector2(150, 620)
+texture = SubResource("PlaceholderTexture2D_1")
+
+[node name="MaoDireita" type="Sprite2D" parent="HUD" unique_id=1791300750]
+modulate = Color(0.7, 0.7, 0.7, 1)
+position = Vector2(1130, 620)
+texture = SubResource("PlaceholderTexture2D_1")

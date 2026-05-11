@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SkyPreset" load_steps=2 format=3 uid="uid://c2p6s3h0xvl4n"]
+
+[ext_resource type="Script" uid="uid://e3q8x1n4cjp0s" path="res://scripts/systems/sky_preset.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+horizon_color = Color(0.55, 0.36, 0.28, 1)
+zenith_color = Color(0.18, 0.13, 0.3, 1)
+cloud_color = Color(0.5, 0.32, 0.42, 1)
+cloud_coverage = 0.6
+sun_light_color = Color(0.95, 0.62, 0.38, 1)
+sun_light_energy = 0.7
+fog_color = Color(0.2, 0.11, 0.09, 1)
+ambient_color = Color(0.35, 0.25, 0.22, 1)
+ambient_energy = 0.5
